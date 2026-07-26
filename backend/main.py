@@ -1,26 +1,33 @@
-import random
+from machine import generate_machine
 import time
 
 
-def generate_machine(name):
-    status = random.choice(["Running", "Idle", "Maintenance"])
-    temperature = round(random.uniform(35.0, 60.0), 1)
-    rpm = random.randint(800, 3000)
+def display_machine(machine):
+    print("-" * 40)
+    print(f"Machine      : {machine['name']}")
+    print(f"Status       : {machine['status']}")
+    print(f"Temperature  : {machine['temperature']} °C")
+    print(f"RPM          : {machine['rpm']}")
+    print(f"Health       : {machine['health']}%")
+    print(f"Condition    : {machine['condition']}")
+    print(f"Maintenance  : {machine['maintenance']}")
 
-    print("=" * 35)
-    print(f"Machine     : {name}")
-    print(f"Status      : {status}")
-    print(f"Temperature : {temperature} °C")
-    print(f"RPM         : {rpm}")
+
+machines = [
+    "CNC-01",
+    "Robot-02",
+    "Lathe-03"
+]
 
 
 while True:
-    print("\n" + "=" * 40)
-    print("AI DIGITAL TWIN LIVE MONITOR")
-    print("=" * 40)
 
-    generate_machine("CNC-01")
-    generate_machine("Robot-02")
-    generate_machine("Lathe-03")
+    print("\n" + "=" * 45)
+    print("AI DIGITAL TWIN MONITOR")
+    print("=" * 45)
+
+    for machine_name in machines:
+        machine = generate_machine(machine_name)
+        display_machine(machine)
 
     time.sleep(2)
