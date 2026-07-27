@@ -1,17 +1,7 @@
 from machine import generate_machine
+from display import show_dashboard
+from logger import log_machine
 import time
-
-
-def display_machine(machine):
-    print("-" * 40)
-    print(f"Machine      : {machine['name']}")
-    print(f"Status       : {machine['status']}")
-    print(f"Temperature  : {machine['temperature']} °C")
-    print(f"RPM          : {machine['rpm']}")
-    print(f"Health       : {machine['health']}%")
-    print(f"Condition    : {machine['condition']}")
-    print(f"Maintenance  : {machine['maintenance']}")
-
 
 machines = [
     "CNC-01",
@@ -28,6 +18,6 @@ while True:
 
     for machine_name in machines:
         machine = generate_machine(machine_name)
-        display_machine(machine)
-
+        show_dashboard(machine)
+        log_machine(machine)
     time.sleep(2)
