@@ -1,5 +1,6 @@
 from datetime import datetime
 import os
+import csv
 
 
 def log_machine(machine):
@@ -8,18 +9,28 @@ def log_machine(machine):
 
     # Path to the data folder
     base_dir = os.path.dirname(__file__)
-    log_path = os.path.join(base_dir, "..", "data", "machine_log.txt")
-
-    log_entry = (
-        f"{current_time} | "
-        f"{machine['name']} | "
-        f"{machine['status']} | "
-        f"{machine['temperature']}°C | "
-        f"{machine['rpm']} RPM | "
-        f"{machine['health']}% | "
-        f"{machine['condition']} | "
-        f"{machine['maintenance']}\n"
-    )
-
-    with open(log_path, "a") as file:
-        file.write(log_entry)
+    log_path = os.path.join(base_dir, "..", "data", "machine_log.csv")
+    file_exists = os.path.exists(log_path)
+    with open(log_path, "a", newline="") as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow([
+                "Timestamp",
+                "Machine",
+                "Status",
+                "Temperature",
+                "RPM",
+                "Health",
+                "Condition",
+                "Maintenance"
+            ])
+        writer.writerow([
+            current_time,
+            machine["name"],
+            machine["status"],
+            machine["temperature"],
+            machine["rpm"],
+            machine["health"],
+            machine["condition"],
+            machine["maintenance"]
+        ])
