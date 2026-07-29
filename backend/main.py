@@ -1,6 +1,7 @@
 from machine import generate_machine
 from display import show_dashboard
 from logger import log_machine
+from analytics import generate_temperature_graph
 import time
 
 machines = [
@@ -20,4 +21,5 @@ while True:
         machine = generate_machine(machine_name)
         show_dashboard(machine)
         log_machine(machine)
+    generate_temperature_graph()   
     time.sleep(2)
