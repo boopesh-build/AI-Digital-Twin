@@ -28,9 +28,11 @@ def generate_temperature_graph():
 
     plt.figure(figsize=(10, 5))
 
+
     plt.plot(cnc_temp, marker="o", label="CNC-01")
     plt.plot(robot_temp, marker="s", label="Robot-02")
     plt.plot(lathe_temp, marker="^", label="Lathe-03")
+
 
     plt.title("Machine Temperature")
 
