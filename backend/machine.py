@@ -1,5 +1,5 @@
-from sensors import get_temperature, get_rpm, get_status
-from health import calculate_health
+from backend.sensors import get_temperature, get_rpm, get_status
+from backend.health import calculate_health
 
 
 def generate_machine(name):
