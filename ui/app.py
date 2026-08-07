@@ -23,7 +23,6 @@ machines = [
 
 # Refresh button
 if st.button("🔄 Refresh Machine Data"):
-
     st.rerun()
 
 
@@ -32,7 +31,6 @@ machine_data = []
 for machine_name in machines:
 
     machine = generate_machine(machine_name)
-
     machine_data.append(machine)
 
 
@@ -46,7 +44,7 @@ for column, machine in zip(columns, machine_data):
 
     with column:
 
-        st.markdown(f"### {machine['name']}")
+        st.markdown(f"## ⚙️ {machine['name']}")
 
         st.metric(
             "Temperature",
@@ -58,12 +56,19 @@ for column, machine in zip(columns, machine_data):
             machine["rpm"]
         )
 
-        st.metric(
-            "Health",
-            f"{machine['health']}%"
+        st.markdown("**Machine Health**")
+
+        health = machine["health"]
+
+        st.progress(
+            health / 100
         )
 
-        st.write(f"**Status:** {machine['status']}")
+        st.write(f"**{health}%**")
+
+        st.write(
+            f"**Status:** {machine['status']}"
+        )
 
         st.write(
             f"**Condition:** {machine['condition']}"
