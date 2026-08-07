@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 from backend.machine import generate_machine
 
@@ -26,6 +27,7 @@ if st.button("🔄 Refresh Machine Data"):
     st.rerun()
 
 
+# Generate current machine data
 machine_data = []
 
 for machine_name in machines:
@@ -33,6 +35,10 @@ for machine_name in machines:
     machine = generate_machine(machine_name)
     machine_data.append(machine)
 
+
+# --------------------------------------------------
+# MACHINE OVERVIEW
+# --------------------------------------------------
 
 st.write("### Machine Overview")
 
@@ -77,3 +83,51 @@ for column, machine in zip(columns, machine_data):
         st.write(
             f"**Maintenance:** {machine['maintenance']}"
         )
+
+
+# --------------------------------------------------
+# HISTORICAL ANALYTICS
+# --------------------------------------------------
+
+st.divider()
+
+st.header("📊 Historical Analytics")
+
+
+csv_path = "data/machine_log.csv"
+
+
+try:
+
+    data = pd.read_csv(csv_path)
+
+    st.write(
+        f"Total recorded readings: **{len(data)}**"
+    )
+
+
+    # Temperature history
+
+    temperature_data = data[
+        ["Machine", "Temperature"]
+    ]
+
+
+    temperature_chart = temperature_data.pivot(
+        columns="Machine",
+        values="Temperature"
+    )
+
+
+    st.subheader("🌡️ Temperature History")
+
+    st.line_chart(
+        temperature_chart
+    )
+
+
+except FileNotFoundError:
+
+    st.warning(
+        "Machine history file not found."
+    )
