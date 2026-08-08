@@ -152,9 +152,19 @@ for column, machine in zip(columns, machine_data):
 
         st.write(f"**{health}%**")
 
-        st.write(
-            f"**Status:** {machine['status']}"
-        )
+        status = machine["status"]
+
+        if status == "Running":
+
+            st.success("🟢 RUNNING")
+
+        elif status == "Idle":
+
+            st.info("🔵 IDLE")
+
+        elif status == "Maintenance":
+
+            st.warning("🟠 MAINTENANCE")    
 
         st.write(
             f"**Condition:** {machine['condition']}"
