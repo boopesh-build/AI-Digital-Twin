@@ -64,6 +64,59 @@ for machine_name in machines:
 
 
 # --------------------------------------------------
+# SYSTEM SUMMARY
+# --------------------------------------------------
+
+st.divider()
+
+st.header("📊 System Overview")
+
+total_machines = len(machine_data)
+
+total_alerts = len(current_alerts)
+
+average_health = sum(
+    machine["health"]
+    for machine in machine_data
+) / total_machines
+
+running_machines = sum(
+    1
+    for machine in machine_data
+    if machine["status"] == "Running"
+)
+
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+
+    st.metric(
+        "Total Machines",
+        total_machines
+    )
+
+with col2:
+
+    st.metric(
+        "Active Alerts",
+        total_alerts
+    )
+
+with col3:
+
+    st.metric(
+        "Average Health",
+        f"{average_health:.0f}%"
+    )
+
+with col4:
+
+    st.metric(
+        "Machines Running",
+        running_machines
+    )
+
+# --------------------------------------------------
 # MACHINE OVERVIEW
 # --------------------------------------------------
 
@@ -204,7 +257,7 @@ for item in predictions:
         st.write(
             prediction["recommendation"]
         )
-        
+
 
 # --------------------------------------------------
 # HISTORICAL ANALYTICS
