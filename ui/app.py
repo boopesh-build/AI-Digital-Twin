@@ -4,6 +4,7 @@ import pandas as pd
 from backend.machine import generate_machine
 from backend.alerts import check_alerts
 from backend.alert_logger import log_alert
+from backend.predictor import predict_maintenance
 
 
 st.set_page_config(
@@ -34,11 +35,13 @@ if st.button("🔄 Refresh Machine Data"):
 
 machine_data = []
 current_alerts = []
-
+predictions = []
 
 for machine_name in machines:
 
     machine = generate_machine(machine_name)
+
+    prediction = predict_maintenance(machine)
 
     alerts = check_alerts(machine)
 
@@ -46,6 +49,11 @@ for machine_name in machines:
         log_alert(machine["name"], alert)
 
     machine_data.append(machine)
+
+    predictions.append({
+        "machine": machine["name"],
+        "prediction": prediction
+    })
 
     for alert in alerts:
 
@@ -156,6 +164,47 @@ else:
         "✅ No active alerts. All machines are operating normally."
     )
 
+
+# --------------------------------------------------
+# PREDICTIVE MAINTENANCE
+# --------------------------------------------------
+
+st.divider()
+
+st.header("🔧 Predictive Maintenance")
+
+
+for item in predictions:
+
+    machine_name = item["machine"]
+    prediction = item["prediction"]
+
+    st.subheader(f"⚙️ {machine_name}")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        st.metric(
+            "Remaining Maintenance",
+            f"{prediction['remaining_days']} days"
+        )
+
+    with col2:
+
+        st.metric(
+            "Risk Level",
+            prediction["risk"]
+        )
+
+    with col3:
+
+        st.write("**Recommendation**")
+
+        st.write(
+            prediction["recommendation"]
+        )
+        
 
 # --------------------------------------------------
 # HISTORICAL ANALYTICS
