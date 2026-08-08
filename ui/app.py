@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 
 from backend.machine import generate_machine
+from backend.alerts import check_alerts
+from backend.alert_logger import log_alert
 
 
 st.set_page_config(
@@ -23,17 +25,34 @@ machines = [
 
 
 # Refresh button
+
 if st.button("🔄 Refresh Machine Data"):
     st.rerun()
 
 
 # Generate current machine data
+
 machine_data = []
+current_alerts = []
+
 
 for machine_name in machines:
 
     machine = generate_machine(machine_name)
+
+    alerts = check_alerts(machine)
+
+    for alert in alerts:
+        log_alert(machine["name"], alert)
+
     machine_data.append(machine)
+
+    for alert in alerts:
+
+        alert_with_machine = alert.copy()
+        alert_with_machine["machine"] = machine["name"]
+
+        current_alerts.append(alert_with_machine)
 
 
 # --------------------------------------------------
@@ -86,6 +105,59 @@ for column, machine in zip(columns, machine_data):
 
 
 # --------------------------------------------------
+# ALERT CENTER
+# --------------------------------------------------
+
+st.divider()
+
+st.header("🚨 Alert Center")
+
+
+if current_alerts:
+
+    st.write(
+        f"Active alerts: **{len(current_alerts)}**"
+    )
+
+    for alert in current_alerts:
+
+        severity = alert["severity"]
+
+        if severity == "HIGH":
+
+            st.error(
+                f"🔴 {alert['machine']} — "
+                f"{alert['message']} | "
+                f"Value: {alert['value']} | "
+                f"Time: {alert['timestamp']}"
+            )
+
+        elif severity == "MEDIUM":
+
+            st.warning(
+                f"🟠 {alert['machine']} — "
+                f"{alert['message']} | "
+                f"Value: {alert['value']} | "
+                f"Time: {alert['timestamp']}"
+            )
+
+        else:
+
+            st.info(
+                f"🟡 {alert['machine']} — "
+                f"{alert['message']} | "
+                f"Value: {alert['value']} | "
+                f"Time: {alert['timestamp']}"
+            )
+
+else:
+
+    st.success(
+        "✅ No active alerts. All machines are operating normally."
+    )
+
+
+# --------------------------------------------------
 # HISTORICAL ANALYTICS
 # --------------------------------------------------
 
@@ -120,6 +192,7 @@ try:
 
 
     st.subheader("🌡️ Temperature History")
+
 
     st.line_chart(
         temperature_chart
