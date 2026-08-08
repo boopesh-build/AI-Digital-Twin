@@ -179,3 +179,7 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+data/machine_log.csv
+backend/machine_log.txt
+data/graphs/temperature.png
+backend/machine_log.txt
